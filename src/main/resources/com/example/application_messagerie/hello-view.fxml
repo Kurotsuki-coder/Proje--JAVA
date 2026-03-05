@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="502.0" maxWidth="806.0" minHeight="502.0" minWidth="806.0" prefHeight="502.0" prefWidth="806.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <HBox prefHeight="502.0" prefWidth="322.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="92.0" styleClass="dark-gray-background" stylesheets="@../../../values/style.css">
+               <children>
+                  <Pane prefHeight="137.0" prefWidth="92.0" VBox.vgrow="ALWAYS" />
+                  <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/icon_msg3.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </ImageView>
+                  <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/icon_groupe.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </ImageView>
+                  <Pane prefHeight="137.0" prefWidth="92.0" />
+                  <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/icon_deconnection.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="20.0" />
+                     </VBox.margin>
+                  </ImageView>
+               </children>
+            </VBox>
+            <VBox prefHeight="502.0" prefWidth="234.0" styleClass="gray-background" stylesheets="@../../../values/style.css">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="200.0" stylesheets="@../../../values/style.css">
+                     <children>
+                        <ImageView fitHeight="26.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/icon_search.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <TextField prefHeight="26.0" prefWidth="137.0" promptText="Rechercher" styleClass="transparent-background" stylesheets="@../../../values/style.css">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Ebrima" size="12.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="5.0" right="5.0" top="20.0" />
+                     </VBox.margin>
+                     <styleClass>
+                        <String fx:value="dark-gray-background" />
+                        <String fx:value="radius" />
+                     </styleClass>
+                  </HBox>
+                  <Pane prefHeight="2.0" prefWidth="200.0" styleClass="dark-gray-background" stylesheets="@../../../values/style.css" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="196.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/icon_profile.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="148.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="88.0" text="Magatte" textFill="WHITE">
+                                 <font>
+                                    <Font name="Ebrima Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="26.0" prefWidth="150.0" text="Moi:Le projet avance ?" textFill="#9da7a7">
+                                 <font>
+                                    <Font name="Ebrima" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="196.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/icon_profile.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="114.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="88.0" text="Banami" textFill="WHITE">
+                                 <font>
+                                    <Font name="Ebrima Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="26.0" prefWidth="150.0" text="Bien joué" textFill="#9da7a7">
+                                 <font>
+                                    <Font name="Ebrima" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <Pane prefHeight="68.0" prefWidth="42.0">
+                           <children>
+                              <Circle fill="#50c984" layoutX="21.0" layoutY="38.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label layoutX="18.0" layoutY="30.0" text="1" textFill="WHITE" />
+                           </children>
+                        </Pane>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="170.0" prefHeight="75.0" prefWidth="196.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/icon_profile.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="114.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="88.0" text="Aminata" textFill="WHITE">
+                                 <font>
+                                    <Font name="Ebrima Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="26.0" prefWidth="150.0" text="Vous avez fini ?" textFill="#9da7a7">
+                                 <font>
+                                    <Font name="Ebrima" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <Pane prefHeight="68.0" prefWidth="42.0">
+                           <children>
+                              <Circle fill="#50c984" layoutX="21.0" layoutY="38.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label layoutX="18.0" layoutY="30.0" text="1" textFill="WHITE" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="245.0" prefHeight="75.0" prefWidth="196.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/icon_profile.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="114.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="88.0" text="Khadim" textFill="WHITE">
+                                 <font>
+                                    <Font name="Ebrima Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="26.0" prefWidth="150.0" text="Naka java bi ?" textFill="#9da7a7">
+                                 <font>
+                                    <Font name="Ebrima" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <Pane prefHeight="68.0" prefWidth="42.0">
+                           <children>
+                              <Circle fill="#50c984" layoutX="21.0" layoutY="38.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label layoutX="18.0" layoutY="30.0" text="2" textFill="WHITE" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="320.0" prefHeight="75.0" prefWidth="196.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/icon_profile.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="152.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="88.0" text="Ndiawar" textFill="WHITE">
+                                 <font>
+                                    <Font name="Ebrima Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="26.0" prefWidth="150.0" text="Moi:Wayedi lagn def" textFill="#9da7a7">
+                                 <font>
+                                    <Font name="Ebrima" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="484.0">
+               <children>
+                  <Label prefHeight="31.0" prefWidth="101.0" text="Magatte" textFill="#9da7a7">
+                     <font>
+                        <Font name="Ebrima Bold" size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Circle fill="#50c984" radius="4.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Label prefHeight="31.0" prefWidth="101.0" text="En ligne" textFill="#9da7a7">
+                     <font>
+                        <Font name="Ebrima" size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Pane prefHeight="62.0" prefWidth="167.0" HBox.hgrow="ALWAYS" />
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/phone.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="29.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/more.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+            </HBox>
+            <ScrollPane prefHeight="381.0" prefWidth="484.0" styleClass="transparent-background" stylesheets="@../../../values/style.css">
+               <content>
+                  <Pane prefHeight="378.0" prefWidth="478.0" styleClass="light-gray-background" stylesheets="@../../../values/style.css">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/user%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="TOP_CENTER" layoutX="69.0" layoutY="20.0" prefHeight="30.0" prefWidth="86.0" styleClass="incoming-bubble" stylesheets="@../../../values/style.css" text="Bonjour :)" textFill="#9da7a7">
+                           <font>
+                              <Font name="Ebrima" size="16.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="419.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/boy%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="TOP_CENTER" layoutX="327.0" layoutY="74.0" prefHeight="30.0" prefWidth="86.0" styleClass="outgoing-bubble" stylesheets="@../../../values/style.css" text="Yoooooo" textFill="WHITE">
+                           <font>
+                              <Font name="Ebrima" size="16.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="14.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/user%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="TOP_CENTER" layoutX="69.0" layoutY="136.0" prefHeight="30.0" prefWidth="143.0" styleClass="incoming-bubble" stylesheets="@../../../values/style.css" text="Comment ça va ?" textFill="#9da7a7">
+                           <font>
+                              <Font name="Ebrima" size="16.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="419.0" layoutY="187.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/boy%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="TOP_CENTER" layoutX="203.0" layoutY="195.0" prefHeight="30.0" prefWidth="210.0" styleClass="outgoing-bubble" stylesheets="@../../../values/style.css" text="Ca va alhamdoulilah et toi ?" textFill="WHITE">
+                           <font>
+                              <Font name="Ebrima" size="16.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="13.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/user%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="TOP_CENTER" layoutX="68.0" layoutY="261.0" prefHeight="30.0" prefWidth="224.0" styleClass="incoming-bubble" stylesheets="@../../../values/style.css" text="Pareille ça va naka projets yi ?" textFill="#9da7a7">
+                           <font>
+                              <Font name="Ebrima" size="16.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="413.0" layoutY="321.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images_java/boy%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="TOP_CENTER" layoutX="197.0" layoutY="329.0" prefHeight="30.0" prefWidth="210.0" styleClass="outgoing-bubble" stylesheets="@../../../values/style.css" text="Wayedi rek dara dokhoul" textFill="WHITE">
+                           <font>
+                              <Font name="Ebrima" size="16.0" />
+                           </font>
+                        </Label>
+                     </children></Pane>
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER" prefHeight="63.0" prefWidth="484.0">
+               <children>
+                  <ImageView fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/happy.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <ImageView fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/paper-clip.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField prefHeight="40.0" prefWidth="349.0" promptText="Ecrire un message à envoyer..." styleClass="transparent-background" stylesheets="@../../../values/style.css" />
+                  <ImageView fitHeight="35.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images_java/send.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="7.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

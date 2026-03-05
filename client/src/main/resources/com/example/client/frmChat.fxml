@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="main_pane" maxHeight="502.0" maxWidth="806.0" minHeight="502.0" minWidth="806.0" prefHeight="502.0" prefWidth="806.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.client.controller.ChatController">
+    <left>
+        <HBox prefHeight="502.0" prefWidth="322.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="92.0" styleClass="dark-gray-background" stylesheets="@../../../values/style.css">
+                    <children>
+                        <Pane prefHeight="137.0" prefWidth="92.0" VBox.vgrow="ALWAYS" />
+                        <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@../../../images_java/icon_msg3.png" /></image>
+                            <VBox.margin><Insets top="20.0" /></VBox.margin>
+                        </ImageView>
+                        <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@../../../images_java/icon_groupe.png" /></image>
+                            <VBox.margin><Insets top="20.0" /></VBox.margin>
+                        </ImageView>
+                        <Pane prefHeight="137.0" prefWidth="92.0" />
+                        <ImageView fx:id="btn_logout" fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleLogout">
+                            <image><Image url="@../../../images_java/icon_deconnection.png" /></image>
+                            <VBox.margin><Insets bottom="20.0" top="20.0" /></VBox.margin>
+                        </ImageView>
+                    </children>
+                </VBox>
+
+                <VBox prefHeight="502.0" prefWidth="234.0" styleClass="gray-background" stylesheets="@../../../values/style.css">
+                    <children>
+                        <HBox alignment="CENTER" prefHeight="42.0" prefWidth="200.0" stylesheets="@../../../values/style.css">
+                            <children>
+                                <ImageView fitHeight="26.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                                    <image><Image url="@../../../images_java/icon_search.png" /></image>
+                                    <HBox.margin><Insets right="5.0" /></HBox.margin>
+                                </ImageView>
+                                <TextField fx:id="txt_search" prefHeight="26.0" prefWidth="137.0" promptText="Rechercher" styleClass="transparent-background" stylesheets="@../../../values/style.css" />
+                            </children>
+                            <VBox.margin><Insets bottom="20.0" left="5.0" right="5.0" top="20.0" /></VBox.margin>
+                            <styleClass>
+                                <String fx:value="dark-gray-background" />
+                                <String fx:value="radius" />
+                            </styleClass>
+                        </HBox>
+                        <Pane prefHeight="2.0" prefWidth="200.0" styleClass="dark-gray-background" />
+
+                        <ScrollPane fitToWidth="true" prefHeight="400.0" styleClass="transparent-background">
+                            <content>
+                                <VBox fx:id="vbox_contacts" prefHeight="380.0" prefWidth="210.0" spacing="5.0" styleClass="gray-background" />
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </left>
+
+    <center>
+        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="484.0">
+                    <children>
+                        <Label fx:id="lbl_current_contact" prefHeight="31.0" prefWidth="120.0" text="En attente..." textFill="#9da7a7">
+                            <font><Font name="Ebrima Bold" size="24.0" /></font>
+                            <HBox.margin><Insets left="20.0" /></HBox.margin>
+                        </Label>
+                        <Circle fx:id="circle_status" fill="#50c984" radius="4.0" strokeWidth="0.0" />
+                        <Label fx:id="lbl_status" text="En ligne" textFill="#9da7a7">
+                            <HBox.margin><Insets left="5.0" /></HBox.margin>
+                        </Label>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@../../../images_java/phone.png" /></image>
+                        </ImageView>
+                        <ImageView fitHeight="27.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@../../../images_java/more.png" /></image>
+                            <HBox.margin><Insets left="10.0" right="10.0" /></HBox.margin>
+                        </ImageView>
+                    </children>
+                </HBox>
+
+                <ScrollPane fx:id="scroll_messages" fitToWidth="true" prefHeight="380.0" prefWidth="484.0" styleClass="transparent-background">
+                    <content>
+                        <VBox fx:id="vbox_messages" spacing="10.0" styleClass="light-gray-background">
+                            <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
+                <HBox alignment="CENTER" prefHeight="60.0" prefWidth="484.0" spacing="10.0" styleClass="dark-gray-background">
+                    <children>
+                        <TextField fx:id="txt_message_input" onAction="#handleSendMessage" prefHeight="35.0" prefWidth="350.0" promptText="Ecrire un message..." styleClass="radius" />
+                        <ImageView fx:id="btn_send" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@../../../images_java/send.png" /></image>
+                        </ImageView>
+                    </children>
+                    <padding><Insets left="10.0" right="10.0" /></padding>
+                </HBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,42 @@
+.dark-gray-background {
+    -fx-background-color: #46474A;
+}
+
+.gray-background {
+    -fx-background-color: #636566;
+}
+
+.transparent-background {
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.radius {
+    -fx-background-radius: 100px;
+}
+
+.light-gray-background {
+    -fx-background-color: #DADADA;
+}
+
+.incoming-bubble {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 20px;
+}
+
+.outgoing-bubble {
+    -fx-background-color: #50C984;
+    -fx-background-radius: 20px;
+}
+
+.contact-item:hover {
+    -fx-background-color: #3e3e42;
+    -fx-background-radius: 8;
+}
+
+.gray-background {
+    -fx-background-color: #2b2b2b;
+}
+
+.dark-gray-background {
+    -fx-background-color: #1e1e1e;
+}
