@@ -51,21 +51,27 @@ public class ClientHandler implements Runnable {
                     out.flush();
                 } else if ("CONNEXION".equals(request.getAction())) {
                     Utilisateur u = (Utilisateur) request.getData();
-                    Utilisateur userEnBase = dbManager.getUtilisateurParNom(u.getNom());
-                    System.out.println("Tentative de connexion de: " + u.getNom());
                     boolean isValid = dbManager.verifierConnexion(u.getNom(), u.getMotsdepasse());
-                    //out.writeObject(isValid ? "SUCCESS" : "FAILED");
-                    //out.flush();
-                    if (isValid && userEnBase != null) {
-                        nomUtilisateur = userEnBase.getNom();
-                        ChatServer.clientsConnectes.put(nomUtilisateur, this);
-                        out.writeObject(userEnBase);
-                        out.flush();
-                        //On prévient tout le monde qu'il y'a un nouveau connecté
-                        this.envoyerObjet(new Payload("UPDATE_USER_LIST", new java.util.ArrayList<>(ChatServer.clientsConnectes.keySet())));
-                        ChatServer.diffuserListeUtilisateurs();
+
+                    if (isValid) {
+                        if (ChatServer.clientsConnectes.containsKey(u.getNom())) {
+                            out.writeObject("ALREADY_CONNECTED");
+                            out.flush();
+                            return; // On arrête là pour ce client
+                        }
+
+                        Utilisateur userEnBase = dbManager.getUtilisateurParNom(u.getNom());
+                        if (userEnBase != null) {
+                            nomUtilisateur = userEnBase.getNom();
+                            ChatServer.clientsConnectes.put(nomUtilisateur, this);
+
+                            out.writeObject(userEnBase); // Succès : on envoie l'objet
+                            out.flush();
+
+                            ChatServer.diffuserListeUtilisateurs();
+                        }
                     } else {
-                        out.writeObject("Failed");
+                        out.writeObject("FAILED");
                         out.flush();
                     }
                 } else if ("SEND_MESSAGE".equals(request.getAction())) {

@@ -49,8 +49,12 @@ public class frmConnexionController {
                     //Pour la redirection
                     redirectionVersChat(event, userConnecte);
                 });
+            } else if ("ALREADY_CONNECTED".equals(reponse)) {
+                lblMessage.setText("Ce compte est déjà connecté");
+                lblMessage.setStyle("-fx-text-fill: orange;");
             } else {
                 Platform.runLater(() -> lblMessage.setText("Identifiant ou mot de passe incorrect"));
+                lblMessage.setStyle("-fx-text-fill: red;");
             }
         });
 
