@@ -2,6 +2,7 @@ package com.example.server.db;
 
 import com.example.common.model.Message;
 import com.example.common.model.Utilisateur;
+import com.example.server.network.ChatServer;
 import com.example.server.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -11,6 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
 
@@ -75,7 +77,7 @@ public class DatabaseManager {
                     .uniqueResult();
 
             if (exp == null || dest == null) {
-                System.err.println("[DB] Expéditeur ou destinataire introuvable en base");
+                ChatServer.logger.severe("[DB] Expéditeur ou destinataire introuvable en base");
                 return;
             }
 
@@ -84,9 +86,9 @@ public class DatabaseManager {
 
             session.persist(msg);
             transaction.commit();
-            System.out.println("[DB] Message sauvegardé dans la base de données");
+            ChatServer.logger.info("[DB] Message sauvegardé dans la base de données");
         } catch (Exception e) {
-            System.err.println("[DB] Erreur lors de la sauvegarde: " + e.getMessage());
+            ChatServer.logger.severe("[DB] Erreur lors de la sauvegarde: " + e.getMessage());
         }
     }
 
@@ -109,7 +111,7 @@ public class DatabaseManager {
             // On récupère les objets complets
             return session.createQuery("FROM Utilisateur", Utilisateur.class).getResultList();
         } catch (Exception e) {
-            System.err.println("[DB] Erreur lors de la récupération des utilisateurs: " + e.getMessage());
+            ChatServer.logger.severe("[DB] Erreur lors de la récupération des utilisateurs: " + e.getMessage());
             return new ArrayList<>();
         }
     }

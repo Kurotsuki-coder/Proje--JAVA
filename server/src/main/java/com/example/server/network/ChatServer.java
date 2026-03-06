@@ -11,8 +11,22 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.*;
 
 public class ChatServer {
+    public static final Logger logger = Logger.getLogger(ChatServer.class.getName());
+
+    static {
+        try {
+            // Crée un fichier "server.log" qui conserve les traces
+            FileHandler fh = new FileHandler("server.log", true);
+            fh.setFormatter(new SimpleFormatter());
+            logger.addHandler(fh);
+        } catch (IOException e) {
+            logger.severe("Erreur d'initialisation du fichier de log : " + e.getMessage());
+        }
+    }
+
     private static final int PORT = 1234;
     // Map des clients actuellement connectés
     public static final Map<String, ClientHandler> clientsConnectes = new ConcurrentHashMap<>();
@@ -22,18 +36,18 @@ public class ChatServer {
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("[SERVEUR] démarré sur le port " + PORT);
+            logger.info("[SERVEUR] démarré sur le port " + PORT);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("[SERVEUR] Connexion entrante : " + clientSocket.getInetAddress());
+                logger.info("[SERVEUR] Connexion entrante : " + clientSocket.getInetAddress());
 
                 // On crée le handler et on le lance
                 ClientHandler handler = new ClientHandler(clientSocket);
                 new Thread(handler).start();
             }
         } catch (IOException e) {
-            System.err.println("[SERVEUR] Erreur critique : " + e.getMessage());
+            logger.severe("[SERVEUR] Erreur critique : " + e.getMessage());
         }
     }
 

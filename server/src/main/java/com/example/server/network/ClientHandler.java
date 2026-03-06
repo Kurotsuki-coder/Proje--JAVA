@@ -27,7 +27,7 @@ public class ClientHandler implements Runnable {
                 out.flush();
             }
         } catch (IOException e) {
-            System.err.println("Erreur d'envoi client: " + e.getMessage());
+            ChatServer.logger.severe("Erreur d'envoi client: " + e.getMessage());
         }
     }
 
@@ -89,9 +89,9 @@ public class ClientHandler implements Runnable {
                 }
             }
         } catch (EOFException | SocketException e) {
-            System.out.println("[SERVEUR] Déconnexion détectée.");
+            ChatServer.logger.info("[SERVEUR] Déconnexion détectée.");
         } catch (Exception e) {
-            System.err.println("[SERVEUR] Erreur Handler: " + e.getMessage());
+            ChatServer.logger.info("[SERVEUR] Erreur Handler: " + e.getMessage());
         } finally {
             if (nomUtilisateur != null) {
                 ChatServer.clientsConnectes.remove(nomUtilisateur);
