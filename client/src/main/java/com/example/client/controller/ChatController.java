@@ -5,6 +5,7 @@ import com.example.common.model.Message;
 import com.example.common.model.Status;
 import com.example.common.model.Utilisateur;
 import com.example.common.network.Payload;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -41,13 +42,13 @@ public class ChatController {
         this.currentUser = user;
         System.out.println("Chat démarré pour: " + user.getNom());
 
+        // 1. Callback messages
         ClientManager.setOnMessageReceived(obj -> {
             Platform.runLater(() -> {
                 if (obj instanceof Payload) {
                     Payload p = (Payload) obj;
 
                     if ("UPDATE_USER_LIST".equals(p.getAction())) {
-                        // ✅ Cast en List<Utilisateur>
                         List<Utilisateur> utilisateurs = (List<Utilisateur>) p.getData();
                         mettreAJourListeContacts(utilisateurs);
 
@@ -80,10 +81,36 @@ public class ChatController {
             });
         });
 
+        // 2. ✅ Callback perte de connexion
+        ClientManager.setOnDeconnexion(() -> {
+            // Mettre tous les cercles en gris
+            vbox_contacts.getChildren().forEach(node -> {
+                if (node instanceof HBox hbox) {
+                    hbox.getChildren().forEach(child -> {
+                        if (child instanceof Circle circle) {
+                            circle.setFill(Color.web("#888888"));
+                        }
+                    });
+                }
+            });
+
+            // Désactiver l'envoi
+            txt_message_input.setDisable(true);
+            lbl_status.setText("Hors ligne");
+            circle_status.setFill(Color.web("#888888"));
+
+            // Afficher l'alerte
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Connexion perdue");
+            alert.setHeaderText("Vous avez été déconnecté du serveur");
+            alert.setContentText("Vérifiez votre connexion et relancez l'application.");
+            alert.showAndWait();
+        });
+
+        // 3. Demander la liste
         ClientManager.envoyerMessage("REQUEST_USER_LIST", null);
     }
 
-    // ✅ Prend List<Utilisateur>
     private void mettreAJourListeContacts(List<Utilisateur> users) {
         Platform.runLater(() -> {
             vbox_contacts.getChildren().clear();
@@ -99,7 +126,6 @@ public class ChatController {
         });
     }
 
-    // ✅ Prend un Utilisateur avec son statut
     private HBox creerItemContact(Utilisateur user) {
         HBox itemContact = new HBox();
         itemContact.setAlignment(Pos.CENTER_LEFT);
@@ -108,7 +134,6 @@ public class ChatController {
         itemContact.setCursor(javafx.scene.Cursor.HAND);
         itemContact.setStyle("-fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
 
-        // ✅ Cercle vert si ONLINE, gris si OFFLINE
         boolean estEnLigne = user.getStatus() != null && user.getStatus() == Status.ONLINE;
         Circle statusCircle = new Circle(5, estEnLigne ? Color.web("#50c984") : Color.web("#888888"));
 

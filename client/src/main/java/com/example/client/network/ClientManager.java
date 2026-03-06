@@ -1,7 +1,7 @@
 package com.example.client.network;
 
 import com.example.common.network.Payload;
-import com.example.common.model.Utilisateur;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,49 +11,65 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class ClientManager {
+
+    //==================================================
+    // CONFIGURATION RÉSEAU
+    //==================================================
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 1234;
-    private static Thread listenerThread;
-    private static Consumer<Object> onMessageReceived;
 
+    //==================================================
+    // CONNEXION SOCKET
+    //==================================================
+    private static Socket socket;
+    private static ObjectOutputStream out; // Flux d'envoi vers le serveur
+    private static ObjectInputStream in;   // Flux de réception depuis le serveur
+
+    //==================================================
+    // THREAD D'ÉCOUTE
+    //==================================================
+    private static Thread listenerThread; // Thread qui écoute en permanence le serveur
+
+    //==================================================
+    // CALLBACKS UI
+    //==================================================
+    private static Consumer<Object> onMessageReceived; // Appelé quand un message async arrive
+    private static Runnable onDeconnexion;             // Appelé quand la connexion est perdue
+
+    //==================================================
+    // FILE D'ATTENTE POUR RÉPONSES SYNCHRONES
+    // (utilisée uniquement pour LOGIN et INSCRIPTION)
+    //==================================================
     private static final BlockingQueue<Object> syncResponseQueue = new LinkedBlockingQueue<>();
     private static volatile boolean waitingForSyncResponse = false;
 
-    private static Socket socket;
-    private static ObjectOutputStream out;
-    private static ObjectInputStream in;
+    //==================================================
+    // SETTERS DES CALLBACKS
+    //==================================================
 
+    /**
+     * Définit le callback appelé à chaque message async reçu du serveur.
+     * (messages, liste users, historique...)
+     */
     public static void setOnMessageReceived(Consumer<Object> callback) {
         onMessageReceived = callback;
     }
 
-    private static void startListeningIfNeeded() {
-        if (listenerThread != null && listenerThread.isAlive()) return;
-
-        listenerThread = new Thread(() -> {
-            try {
-                while (true) {
-                    Object obj = in.readObject();
-
-                    // Réponse synchrone attendue (connexion / inscription)
-                    if (waitingForSyncResponse) {
-                        syncResponseQueue.put(obj);
-                    } else {
-                        // Message async → callback UI
-                        if (onMessageReceived != null) {
-                            final Object finalObj = obj;
-                            onMessageReceived.accept(finalObj);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("Déconnexion du flux d'écoute: " + e.getMessage());
-            }
-        });
-        listenerThread.setDaemon(true);
-        listenerThread.start();
+    /**
+     * Définit le callback appelé quand la connexion au serveur est perdue.
+     */
+    public static void setOnDeconnexion(Runnable callback) {
+        onDeconnexion = callback;
     }
 
+    //==================================================
+    // CONNEXION
+    //==================================================
+
+    /**
+     * Ouvre la connexion socket avec le serveur si elle n'est pas déjà ouverte.
+     * Démarre aussi le thread d'écoute si nécessaire.
+     */
     public static void connecter() throws IOException {
         if (socket == null || socket.isClosed()) {
             socket = new Socket(SERVER_HOST, SERVER_PORT);
@@ -63,40 +79,114 @@ public class ClientManager {
         startListeningIfNeeded();
     }
 
-    // Pour connexion et inscription uniquement
+    /**
+     * Ferme la connexion socket et arrête le thread d'écoute.
+     */
+    public static void deconnecter() throws IOException {
+        if (socket != null) {
+            socket.close();
+            socket = null;
+            listenerThread = null;
+        }
+    }
+
+    //==================================================
+    // THREAD D'ÉCOUTE
+    //==================================================
+
+    /**
+     * Démarre le thread d'écoute s'il n'est pas déjà actif.
+     * Ce thread tourne en permanence et dispatch les objets reçus :
+     * - Vers syncResponseQueue si on attend une réponse synchrone (login/inscription)
+     * - Vers onMessageReceived sinon (messages, liste users, historique...)
+     */
+    private static void startListeningIfNeeded() {
+        if (listenerThread != null && listenerThread.isAlive()) return;
+
+        listenerThread = new Thread(() -> {
+            try {
+                while (true) {
+                    Object obj = in.readObject();
+
+                    if (waitingForSyncResponse) {
+                        // Réponse attendue (login/inscription) → débloquer envoyerRequete()
+                        syncResponseQueue.put(obj);
+                    } else {
+                        // Message async → notifier l'UI
+                        if (onMessageReceived != null) {
+                            final Object finalObj = obj;
+                            onMessageReceived.accept(finalObj);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("[CLIENT] Déconnexion du flux d'écoute: " + e.getMessage());
+                // Notifier l'UI de la perte de connexion
+                if (onDeconnexion != null) {
+                    Platform.runLater(onDeconnexion);
+                }
+            }
+        });
+        listenerThread.setDaemon(true); // Le thread s'arrête quand l'app se ferme
+        listenerThread.start();
+    }
+
+    //==================================================
+    // ENVOI DE MESSAGES
+    //==================================================
+
+    /**
+     * Envoi SYNCHRONE — attend la réponse du serveur (max 5 secondes).
+     * Utilisé uniquement pour LOGIN et INSCRIPTION.
+     */
     public static Object envoyerRequete(String action, Object data) {
         try {
-            connecter(); // Ouvre le socket ET démarre le listener
+            connecter();
             syncResponseQueue.clear();
             waitingForSyncResponse = true;
 
             out.writeObject(new Payload(action, data));
             out.flush();
 
-            // Attendre la réponse max 5 secondes via la BlockingQueue
+            // Bloquer jusqu'à réception de la réponse ou timeout
             Object response = syncResponseQueue.poll(5, TimeUnit.SECONDS);
             waitingForSyncResponse = false;
 
             if (response == null) {
-                System.err.println("Timeout : pas de réponse du serveur");
+                System.err.println("[CLIENT] Timeout : pas de réponse du serveur");
             }
             return response;
+
         } catch (Exception e) {
             waitingForSyncResponse = false;
-            System.err.println("Erreur requête: " + e.getMessage());
+            System.err.println("[CLIENT] Erreur requête: " + e.getMessage());
+            if (onDeconnexion != null) {
+                Platform.runLater(onDeconnexion);
+            }
             return null;
         }
     }
 
+    /**
+     * Envoi ASYNCHRONE — envoie et n'attend pas de réponse.
+     * Utilisé pour tout le reste (messages, demande liste, historique...)
+     */
     public static void envoyerMessage(String action, Object data) {
         try {
             connecter();
             out.writeObject(new Payload(action, data));
             out.flush();
         } catch (Exception e) {
-            System.err.println("Erreur d'envoi: " + e.getMessage());
+            System.err.println("[CLIENT] Erreur d'envoi: " + e.getMessage());
+            if (onDeconnexion != null) {
+                Platform.runLater(onDeconnexion);
+            }
         }
     }
+
+    //==================================================
+    // UTILITAIRES
+    //==================================================
 
     public static void startListening() {
         startListeningIfNeeded();
@@ -104,13 +194,5 @@ public class ClientManager {
 
     public static ObjectInputStream getIn() {
         return in;
-    }
-
-    public static void deconnecter() throws IOException {
-        if (socket != null) {
-            socket.close();
-            socket = null;
-            listenerThread = null;
-        }
     }
 }
