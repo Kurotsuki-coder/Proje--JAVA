@@ -99,4 +99,18 @@ public class DatabaseManager {
             return null;
         }
     }
+
+    /**
+     * Récupère la liste complète des objets Utilisateur.
+     * Cette version est compatible avec le ChatServer et le ChatController de ton binôme.
+     */
+    public List<Utilisateur> getAllUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // On récupère les objets complets
+            return session.createQuery("FROM Utilisateur", Utilisateur.class).getResultList();
+        } catch (Exception e) {
+            System.err.println("[DB] Erreur lors de la récupération des utilisateurs: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
 }

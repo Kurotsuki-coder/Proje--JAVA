@@ -1,19 +1,15 @@
 package com.example.client.controller;
 
 import com.example.client.network.ClientManager;
-import com.example.common.model.Message;
-import com.example.common.model.Utilisateur;
+import com.example.common.model.*;
 import com.example.common.network.Payload;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
+import javafx.scene.Cursor;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -29,176 +25,93 @@ public class ChatController {
     @FXML private Label lbl_status;
     @FXML private Circle circle_status;
 
-    private Utilisateur currentUser = new Utilisateur("Moi", "pass");
+    private Utilisateur currentUser;
 
-    @FXML
-    public void initialize() {
+    public void setCurrentUser(Utilisateur user) {
+        this.currentUser = user;
+
         ClientManager.setOnMessageReceived(obj -> {
             Platform.runLater(() -> {
                 if (obj instanceof Payload) {
                     Payload p = (Payload) obj;
-
                     if ("UPDATE_USER_LIST".equals(p.getAction())) {
-                        List<String> utilisateurs = (List<String>) p.getData();
-                        mettreAJourListeContacts(utilisateurs);
-
+                        mettreAJourListeContacts((List<Utilisateur>) p.getData());
                     } else if ("HISTORY_DATA".equals(p.getAction())) {
                         vbox_messages.getChildren().clear();
-                        List<Message> messages = (List<Message>) p.getData();
-                        for (Message m : messages) {
-                            afficherNouveauMessage(m);
-                        }
+                        ((List<Message>) p.getData()).forEach(this::afficherNouveauMessage);
                     }
-
                 } else if (obj instanceof Message) {
                     Message msg = (Message) obj;
-                    String expediteur = msg.getExpediteur().getNom().trim();
-                    String correspondantActuel = lbl_current_contact.getText().trim();
-
-                    if (correspondantActuel.contains("En attente")) {
-                        lbl_current_contact.setText(expediteur);
-                        lbl_status.setText("En ligne");
-                        circle_status.setFill(Color.web("#50c984"));
-                        correspondantActuel = expediteur;
-                    }
-
-                    if (expediteur.equals(correspondantActuel) || expediteur.equals(currentUser.getNom())) {
+                    String expediteur = msg.getExpediteur().getNom();
+                    if (expediteur.equals(lbl_current_contact.getText()) || expediteur.equals(currentUser.getNom())) {
                         afficherNouveauMessage(msg);
-                    } else {
-                        System.out.println("Message reçu en arrière-plan de : " + expediteur);
                     }
                 }
             });
         });
-
         ClientManager.envoyerMessage("REQUEST_USER_LIST", null);
     }
 
-    private void mettreAJourListeContacts(List<String> noms) {
-        Platform.runLater(() -> {
-            vbox_contacts.getChildren().clear();
-            for (String nom : noms) {
-                if (nom.equals(currentUser.getNom())) continue;
-                HBox itemContact = creerItemContact(nom);
-                vbox_contacts.getChildren().add(itemContact);
-            }
-
-            if (lbl_current_contact.getText().equals("En attente...") && !vbox_contacts.getChildren().isEmpty()) {
-                MouseEvent.fireEvent(vbox_contacts.getChildren().get(0), new MouseEvent(
-                        MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
-                        1, true, true, true, true, true, true, true, true, true, true, null));
-            }
-        });
+    private void mettreAJourListeContacts(List<Utilisateur> users) {
+        vbox_contacts.getChildren().clear();
+        for (Utilisateur user : users) {
+            // Empêche de s'afficher soi-même
+            if (currentUser != null && user.getNom().equals(currentUser.getNom())) continue;
+            vbox_contacts.getChildren().add(creerItemContact(user));
+        }
     }
 
-    private HBox creerItemContact(String nom) {
-        HBox itemContact = new HBox();
-        itemContact.setAlignment(Pos.CENTER_LEFT);
-        itemContact.setSpacing(10);
-        itemContact.setPadding(new javafx.geometry.Insets(10, 15, 10, 15));
-        itemContact.setCursor(javafx.scene.Cursor.HAND);
-        itemContact.setStyle("-fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
+    private HBox creerItemContact(Utilisateur user) {
+        HBox item = new HBox(10);
+        item.setPadding(new Insets(10, 15, 10, 15));
+        item.setCursor(Cursor.HAND);
+        item.setStyle("-fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
 
-        Circle statusCircle = new Circle(5, Color.web("#50c984"));
+        boolean estEnLigne = user.getStatus() == Status.ONLINE;
+        Circle statusCircle = new Circle(5, estEnLigne ? Color.web("#50c984") : Color.web("#888888"));
 
-        Label lblNom = new Label(nom);
-        lblNom.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-family: 'Segoe UI';");
+        Label lblNom = new Label(user.getNom());
+        lblNom.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
 
-        itemContact.getChildren().addAll(statusCircle, lblNom);
+        item.getChildren().addAll(statusCircle, lblNom);
 
-        itemContact.setOnMouseClicked(e -> {
-            lbl_current_contact.setText(nom);
-            lbl_status.setText("En ligne");
-            circle_status.setFill(Color.web("#50c984"));
-
+        item.setOnMouseClicked(e -> {
+            lbl_current_contact.setText(user.getNom());
+            lbl_status.setText(estEnLigne ? "En ligne" : "Hors ligne");
+            circle_status.setFill(statusCircle.getFill());
             vbox_messages.getChildren().clear();
-
-            Utilisateur cible = new Utilisateur();
-            cible.setNom(nom);
-            ClientManager.envoyerMessage("GET_HISTORY", cible);
-
-            vbox_contacts.getChildren().forEach(node ->
-                    node.setStyle("-fx-background-color: transparent; -fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;")
-            );
-            itemContact.setStyle("-fx-background-color: #3e3e42; -fx-background-radius: 5;");
+            ClientManager.envoyerMessage("GET_HISTORY", user);
         });
-
-        itemContact.setOnMouseEntered(e -> {
-            if (!lbl_current_contact.getText().equals(nom)) {
-                itemContact.setStyle("-fx-background-color: #2d2d30; -fx-background-radius: 5;");
-            }
-        });
-        itemContact.setOnMouseExited(e -> {
-            if (!lbl_current_contact.getText().equals(nom)) {
-                itemContact.setStyle("-fx-background-color: transparent; -fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
-            }
-        });
-
-        return itemContact;
+        return item;
     }
 
     @FXML
     private void handleSendMessage() {
-
         String texte = txt_message_input.getText().trim();
-        String destinataireNom = lbl_current_contact.getText();
+        if (texte.isEmpty() || lbl_current_contact.getText().contains("En attente")) return;
 
-        if (texte.isEmpty() || destinataireNom.contains("En attente")) return;
-
-        if (texte.length() > 1000) {
-            txt_message_input.setStyle("-fx-border-color: red;");
-            txt_message_input.setPromptText("Message trop long (max 1000 caractères) !");
-            return;
-        }
-
-        // On remet le style normal si tout est ok
-        txt_message_input.setStyle("");
-        txt_message_input.setPromptText("Ecrire un message...");
-
-        Utilisateur destinataire = new Utilisateur();
-        destinataire.setNom(destinataireNom);
-
-        Message messageAEnvoyer = new Message(currentUser, destinataire, texte);
-        ClientManager.envoyerMessage("SEND_PRIVATE_MESSAGE", messageAEnvoyer);
-        afficherNouveauMessage(messageAEnvoyer);
+        Message msg = new Message(currentUser, new Utilisateur(lbl_current_contact.getText(), ""), texte);
+        ClientManager.envoyerMessage("SEND_PRIVATE_MESSAGE", msg);
+        afficherNouveauMessage(msg);
         txt_message_input.clear();
     }
 
     private void afficherNouveauMessage(Message msg) {
-        HBox conteneurBulle = new HBox();
         Label bulle = new Label(msg.getContenu());
-        bulle.setWrapText(true);
-        bulle.setMaxWidth(300);
-        bulle.setPadding(new javafx.geometry.Insets(8, 12, 8, 12));
+        bulle.setPadding(new Insets(8, 12, 8, 12));
+        boolean moi = msg.getExpediteur().getNom().equals(currentUser.getNom());
+        bulle.setStyle(moi ? "-fx-background-color: #0084FF; -fx-text-fill: white; -fx-background-radius: 15;"
+                : "-fx-background-color: #E4E6EB; -fx-text-fill: black; -fx-background-radius: 15;");
 
-        boolean cestMoi = msg.getExpediteur().getNom().equals(currentUser.getNom());
-
-        if (cestMoi) {
-            conteneurBulle.setAlignment(Pos.CENTER_RIGHT);
-            bulle.setStyle("-fx-background-color: #0084FF; -fx-text-fill: white; -fx-background-radius: 15 15 2 15;");
-        } else {
-            conteneurBulle.setAlignment(Pos.CENTER_LEFT);
-            bulle.setText(msg.getExpediteur().getNom() + ":\n" + msg.getContenu());
-            bulle.setStyle("-fx-background-color: #E4E6EB; -fx-text-fill: black; -fx-background-radius: 15 15 15 2;");
-        }
-
-        conteneurBulle.getChildren().add(bulle);
-        vbox_messages.getChildren().add(conteneurBulle);
+        HBox box = new HBox(moi ? bulle : new VBox(new Label(msg.getExpediteur().getNom() + ":"), bulle));
+        box.setAlignment(moi ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        vbox_messages.getChildren().add(box);
         scroll_messages.setVvalue(1.0);
     }
 
-    public void setCurrentUser(Utilisateur user) {
-        this.currentUser = user;
-        System.out.println("Chat démarré pour: " + user.getNom());
-    }
-
     @FXML
-    private void handleLogout(MouseEvent event) {
-        try {
-            ClientManager.deconnecter();
-            System.exit(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void handleLogout() throws IOException {
+        ClientManager.deconnecter();
+        System.exit(0);
     }
 }
