@@ -8,7 +8,6 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,13 +42,13 @@ public class DatabaseManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false; // Si le user n'existe pas ou si le mdp est faux
+        return false;
     }
 
     public List<Message> recupererHistorique(String nom1, String nom2) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Message m WHERE " +
-                    "(m.expediteur.nom = :n1 AND m.destinataire.nom = :n2) OR " + // ← "=" ajouté
+                    "(m.expediteur.nom = :n1 AND m.destinataire.nom = :n2) OR " +
                     "(m.expediteur.nom = :n2 AND m.destinataire.nom = :n1) " +
                     "ORDER BY m.dateEnvoi ASC";
 
@@ -97,6 +96,20 @@ public class DatabaseManager {
                     .uniqueResult();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    // ✅ Corrigé — Hibernate comme le reste, plus de JDBC brut
+    public List<String> getAllUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<String> noms = session.createQuery(
+                    "SELECT u.nom FROM Utilisateur u", String.class
+            ).getResultList();
+            System.out.println("[DB] getAllUsers → " + noms); // debug
+            return noms;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }

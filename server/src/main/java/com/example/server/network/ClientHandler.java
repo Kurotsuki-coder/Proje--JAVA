@@ -21,7 +21,6 @@ public class ClientHandler implements Runnable {
         this.dbManager = new DatabaseManager();
     }
 
-    //Méthode pour que le serveur puisse pousser un message vers ce client
     public void envoyerObjet(Object obj) {
         try {
             if (out != null) {
@@ -35,7 +34,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        String nomUtilisateur = null; //Pour savoir qui se déconnecte à la fin
+        String nomUtilisateur = null;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
@@ -49,46 +48,58 @@ public class ClientHandler implements Runnable {
                     boolean success = dbManager.sauvegarderUtilisateur(u.getNom(), u.getMotsdepasse());
                     out.writeObject(success ? "SUCCESS" : "DEJA_EXISTANT");
                     out.flush();
+
                 } else if ("CONNEXION".equals(request.getAction())) {
                     Utilisateur u = (Utilisateur) request.getData();
                     Utilisateur userEnBase = dbManager.getUtilisateurParNom(u.getNom());
                     System.out.println("Tentative de connexion de: " + u.getNom());
                     boolean isValid = dbManager.verifierConnexion(u.getNom(), u.getMotsdepasse());
-                    //out.writeObject(isValid ? "SUCCESS" : "FAILED");
-                    //out.flush();
+
                     if (isValid && userEnBase != null) {
                         nomUtilisateur = userEnBase.getNom();
                         ChatServer.clientsConnectes.put(nomUtilisateur, this);
+
+                        // 1. Envoyer le user connecté au client
                         out.writeObject(userEnBase);
                         out.flush();
-                        //On prévient tout le monde qu'il y'a un nouveau connecté
-                        this.envoyerObjet(new Payload("UPDATE_USER_LIST", new java.util.ArrayList<>(ChatServer.clientsConnectes.keySet())));
+
+                        // 2. ✅ Envoyer TOUS les users de la DB à CE client
+                        List<String> tousLesUsers = dbManager.getAllUsers();
+                        this.envoyerObjet(new Payload("UPDATE_USER_LIST", tousLesUsers));
+
+                        // 3. Diffuser la liste complète à TOUS les autres connectés
                         ChatServer.diffuserListeUtilisateurs();
+
                     } else {
                         out.writeObject("Failed");
                         out.flush();
                     }
+
                 } else if ("SEND_MESSAGE".equals(request.getAction())) {
                     Message msg = (Message) request.getData();
                     System.out.println("[CHAT] Message reçu de " + msg.getExpediteur().getNom());
-                    //On demande au ChatServer de rediffuser à tout le meonde
                     ChatServer.diffuserMessage(msg);
+
                 } else if ("SEND_PRIVATE_MESSAGE".equals(request.getAction())) {
                     Message msg = (Message) request.getData();
                     dbManager.sauvegarderMessage(msg);
                     ChatServer.envoyerMessagePrive(msg.getDestinataire().getNom(), msg);
-                    System.out.println("[CHAT] Message de " + msg.getExpediteur().getNom() + " sauvegardé et transmis à " + msg.getDestinataire().getNom());
-                    //On envoi uniquement au destinataire
-                    //ChatServer.envoyerMessagePrive(msg.getDestinataire().getNom(), msg);
+                    System.out.println("[CHAT] Message de " + msg.getExpediteur().getNom() + " transmis à " + msg.getDestinataire().getNom());
+
                 } else if ("GET_HISTORY".equals(request.getAction())) {
                     Utilisateur cible = (Utilisateur) request.getData();
                     List<Message> historique = dbManager.recupererHistorique(nomUtilisateur, cible.getNom());
                     out.writeObject(new Payload("HISTORY_DATA", historique));
                     out.flush();
+
                 } else if ("REQUEST_USER_LIST".equals(request.getAction())) {
-                    this.envoyerObjet(new Payload("UPDATE_USER_LIST", new java.util.ArrayList<>(ChatServer.clientsConnectes.keySet())));
+                    // ✅ Toujours depuis la DB
+                    List<String> tousLesUsers = dbManager.getAllUsers();
+                    System.out.println("[SERVEUR] Liste users envoyée: " + tousLesUsers);
+                    this.envoyerObjet(new Payload("UPDATE_USER_LIST", tousLesUsers));
                 }
             }
+
         } catch (EOFException | SocketException e) {
             System.out.println("[SERVEUR] Un client s'est déconnecté");
         } catch (Exception e) {
@@ -96,9 +107,8 @@ public class ClientHandler implements Runnable {
         } finally {
             if (nomUtilisateur != null) {
                 ChatServer.clientsConnectes.remove(nomUtilisateur);
-                ChatServer.diffuserListeUtilisateurs(); //Mise à jour de la liste
+                ChatServer.diffuserListeUtilisateurs();
             }
-            //ChatServer.clients.remove(this);
             try {
                 socket.close();
             } catch (IOException e) {
