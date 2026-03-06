@@ -1,5 +1,6 @@
 package com.example.server.network;
 
+import com.example.common.model.Status;
 import com.example.common.model.Utilisateur;
 import com.example.common.network.Payload;
 import com.example.server.db.DatabaseManager;
@@ -59,15 +60,17 @@ public class ClientHandler implements Runnable {
                         nomUtilisateur = userEnBase.getNom();
                         ChatServer.clientsConnectes.put(nomUtilisateur, this);
 
-                        // 1. Envoyer le user connecté au client
+                        // ✅ Mettre ONLINE en DB
+                        dbManager.updateStatus(nomUtilisateur, Status.ONLINE);
+
                         out.writeObject(userEnBase);
                         out.flush();
 
-                        // 2. ✅ Envoyer TOUS les users de la DB à CE client
-                        List<String> tousLesUsers = dbManager.getAllUsers();
+                        // ✅ Envoyer List<Utilisateur> avec statuts
+                        List<Utilisateur> tousLesUsers = dbManager.getAllUsers();
                         this.envoyerObjet(new Payload("UPDATE_USER_LIST", tousLesUsers));
 
-                        // 3. Diffuser la liste complète à TOUS les autres connectés
+                        // Diffuser à tous les autres
                         ChatServer.diffuserListeUtilisateurs();
 
                     } else {
@@ -93,9 +96,8 @@ public class ClientHandler implements Runnable {
                     out.flush();
 
                 } else if ("REQUEST_USER_LIST".equals(request.getAction())) {
-                    // ✅ Toujours depuis la DB
-                    List<String> tousLesUsers = dbManager.getAllUsers();
-                    System.out.println("[SERVEUR] Liste users envoyée: " + tousLesUsers);
+                    List<Utilisateur> tousLesUsers = dbManager.getAllUsers();
+                    System.out.println("[SERVEUR] Liste users envoyée: " + tousLesUsers.size());
                     this.envoyerObjet(new Payload("UPDATE_USER_LIST", tousLesUsers));
                 }
             }
@@ -106,6 +108,8 @@ public class ClientHandler implements Runnable {
             System.err.println("[SERVEUR] Erreur ClientHandler: " + e.getMessage());
         } finally {
             if (nomUtilisateur != null) {
+                // ✅ Mettre OFFLINE en DB à la déconnexion
+                dbManager.updateStatus(nomUtilisateur, Status.OFFLINE);
                 ChatServer.clientsConnectes.remove(nomUtilisateur);
                 ChatServer.diffuserListeUtilisateurs();
             }

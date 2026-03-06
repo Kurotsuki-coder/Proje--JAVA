@@ -1,5 +1,6 @@
 package com.example.server.network;
 
+import com.example.common.model.Utilisateur;
 import com.example.common.network.Payload;
 import com.example.server.db.DatabaseManager;
 
@@ -11,8 +12,6 @@ import java.util.List;
 public class ChatServer {
     private static final int PORT = 1234;
     public static java.util.Map<String, ClientHandler> clientsConnectes = new java.util.concurrent.ConcurrentHashMap<>();
-
-    // ✅ Une seule instance de DatabaseManager partagée
     private static final DatabaseManager dbManager = new DatabaseManager();
 
     public void start() {
@@ -21,10 +20,9 @@ public class ChatServer {
             System.out.println("En attente de connexions clients...");
 
             while (true) {
-                Socket clienSocket = serverSocket.accept();
-                System.out.println("[SERVEUR] Nouveau Client connecté: " + clienSocket.getInetAddress());
-
-                ClientHandler handler = new ClientHandler(clienSocket);
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("[SERVEUR] Nouveau Client connecté: " + clientSocket.getInetAddress());
+                ClientHandler handler = new ClientHandler(clientSocket);
                 new Thread(handler).start();
             }
         } catch (IOException e) {
@@ -45,10 +43,10 @@ public class ChatServer {
         }
     }
 
-    // ✅ Corrigé — envoie TOUS les users de la DB, pas juste les connectés
+    // ✅ Diffuse List<Utilisateur> avec statuts
     public static void diffuserListeUtilisateurs() {
-        List<String> tousLesUsers = dbManager.getAllUsers();
-        System.out.println("[SERVEUR] Diffusion liste complète: " + tousLesUsers);
+        List<Utilisateur> tousLesUsers = dbManager.getAllUsers();
+        System.out.println("[SERVEUR] Diffusion liste complète: " + tousLesUsers.size() + " users");
         Payload payload = new Payload("UPDATE_USER_LIST", tousLesUsers);
         for (ClientHandler client : clientsConnectes.values()) {
             client.envoyerObjet(payload);
@@ -56,7 +54,6 @@ public class ChatServer {
     }
 
     public static void main(String[] args) {
-        ChatServer server = new ChatServer();
-        server.start();
+        new ChatServer().start();
     }
 }

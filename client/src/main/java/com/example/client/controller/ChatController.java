@@ -2,6 +2,7 @@ package com.example.client.controller;
 
 import com.example.client.network.ClientManager;
 import com.example.common.model.Message;
+import com.example.common.model.Status;
 import com.example.common.model.Utilisateur;
 import com.example.common.network.Payload;
 import javafx.scene.control.ScrollPane;
@@ -40,14 +41,14 @@ public class ChatController {
         this.currentUser = user;
         System.out.println("Chat démarré pour: " + user.getNom());
 
-        // 1. Configurer le callback MAINTENANT que currentUser est défini
         ClientManager.setOnMessageReceived(obj -> {
             Platform.runLater(() -> {
                 if (obj instanceof Payload) {
                     Payload p = (Payload) obj;
 
                     if ("UPDATE_USER_LIST".equals(p.getAction())) {
-                        List<String> utilisateurs = (List<String>) p.getData();
+                        // ✅ Cast en List<Utilisateur>
+                        List<Utilisateur> utilisateurs = (List<Utilisateur>) p.getData();
                         mettreAJourListeContacts(utilisateurs);
 
                     } else if ("HISTORY_DATA".equals(p.getAction())) {
@@ -79,16 +80,15 @@ public class ChatController {
             });
         });
 
-        // 2. Demander la liste APRÈS que le callback est configuré
         ClientManager.envoyerMessage("REQUEST_USER_LIST", null);
     }
 
-    private void mettreAJourListeContacts(List<String> noms) {
+    // ✅ Prend List<Utilisateur>
+    private void mettreAJourListeContacts(List<Utilisateur> users) {
         Platform.runLater(() -> {
             vbox_contacts.getChildren().clear();
-            for (String nom : noms) {
-
-                HBox itemContact = creerItemContact(nom);
+            for (Utilisateur user : users) {
+                HBox itemContact = creerItemContact(user);
                 vbox_contacts.getChildren().add(itemContact);
             }
 
@@ -99,7 +99,8 @@ public class ChatController {
         });
     }
 
-    private HBox creerItemContact(String nom) {
+    // ✅ Prend un Utilisateur avec son statut
+    private HBox creerItemContact(Utilisateur user) {
         HBox itemContact = new HBox();
         itemContact.setAlignment(Pos.CENTER_LEFT);
         itemContact.setSpacing(10);
@@ -107,22 +108,24 @@ public class ChatController {
         itemContact.setCursor(javafx.scene.Cursor.HAND);
         itemContact.setStyle("-fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
 
-        Circle statusCircle = new Circle(5, Color.web("#50c984"));
+        // ✅ Cercle vert si ONLINE, gris si OFFLINE
+        boolean estEnLigne = user.getStatus() != null && user.getStatus() == Status.ONLINE;
+        Circle statusCircle = new Circle(5, estEnLigne ? Color.web("#50c984") : Color.web("#888888"));
 
-        Label lblNom = new Label(nom);
+        Label lblNom = new Label(user.getNom());
         lblNom.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-family: 'Segoe UI';");
 
         itemContact.getChildren().addAll(statusCircle, lblNom);
 
         itemContact.setOnMouseClicked(e -> {
-            lbl_current_contact.setText(nom);
-            lbl_status.setText("En ligne");
-            circle_status.setFill(Color.web("#50c984"));
+            lbl_current_contact.setText(user.getNom());
+            lbl_status.setText(estEnLigne ? "En ligne" : "Hors ligne");
+            circle_status.setFill(estEnLigne ? Color.web("#50c984") : Color.web("#888888"));
 
             vbox_messages.getChildren().clear();
 
             Utilisateur cible = new Utilisateur();
-            cible.setNom(nom);
+            cible.setNom(user.getNom());
             ClientManager.envoyerMessage("GET_HISTORY", cible);
 
             vbox_contacts.getChildren().forEach(node ->
@@ -132,13 +135,13 @@ public class ChatController {
         });
 
         itemContact.setOnMouseEntered(e -> {
-            if (!lbl_current_contact.getText().equals(nom)) {
+            if (!lbl_current_contact.getText().equals(user.getNom())) {
                 itemContact.setStyle("-fx-background-color: #2d2d30; -fx-background-radius: 5;");
             }
         });
 
         itemContact.setOnMouseExited(e -> {
-            if (!lbl_current_contact.getText().equals(nom)) {
+            if (!lbl_current_contact.getText().equals(user.getNom())) {
                 itemContact.setStyle("-fx-background-color: transparent; -fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
             }
         });
