@@ -1,15 +1,22 @@
 package com.example.client.controller;
 
 import com.example.client.network.ClientManager;
-import com.example.common.model.*;
+import com.example.common.model.Message;
+import com.example.common.model.Status;
+import com.example.common.model.Utilisateur;
 import com.example.common.network.Payload;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -27,91 +34,185 @@ public class ChatController {
 
     private Utilisateur currentUser;
 
+    @FXML
+    public void initialize() {
+        // Rien ici — tout est dans setCurrentUser()
+    }
+
     public void setCurrentUser(Utilisateur user) {
         this.currentUser = user;
+        System.out.println("Chat démarré pour: " + user.getNom());
 
+        // 1. Callback messages
         ClientManager.setOnMessageReceived(obj -> {
             Platform.runLater(() -> {
                 if (obj instanceof Payload) {
                     Payload p = (Payload) obj;
+
                     if ("UPDATE_USER_LIST".equals(p.getAction())) {
                         mettreAJourListeContacts((List<Utilisateur>) p.getData());
+
                     } else if ("HISTORY_DATA".equals(p.getAction())) {
                         vbox_messages.getChildren().clear();
                         ((List<Message>) p.getData()).forEach(this::afficherNouveauMessage);
                     }
+
                 } else if (obj instanceof Message) {
                     Message msg = (Message) obj;
-                    String expediteur = msg.getExpediteur().getNom();
-                    if (expediteur.equals(lbl_current_contact.getText()) || expediteur.equals(currentUser.getNom())) {
+                    String expediteur = msg.getExpediteur().getNom().trim();
+                    String correspondantActuel = lbl_current_contact.getText().trim();
+
+                    // Si on reçoit un message alors qu'on attend encore un contact
+                    if (correspondantActuel.contains("En attente")) {
+                        lbl_current_contact.setText(expediteur);
+                        lbl_status.setText("En ligne");
+                        circle_status.setFill(Color.web("#50c984"));
+                        correspondantActuel = expediteur;
+                    }
+
+                    if (expediteur.equals(correspondantActuel) || expediteur.equals(currentUser.getNom())) {
                         afficherNouveauMessage(msg);
+                    } else {
+                        System.out.println("Message reçu en arrière-plan de : " + expediteur);
                     }
                 }
             });
         });
+
+        // 2. Callback perte de connexion
+        ClientManager.setOnDeconnexion(() -> {
+            Platform.runLater(() -> {
+                // Mettre tous les cercles en gris
+                vbox_contacts.getChildren().forEach(node -> {
+                    if (node instanceof HBox hbox) {
+                        hbox.getChildren().forEach(child -> {
+                            if (child instanceof Circle circle) {
+                                circle.setFill(Color.web("#888888"));
+                            }
+                        });
+                    }
+                });
+
+                // Désactiver l'envoi
+                txt_message_input.setDisable(true);
+                lbl_status.setText("Hors ligne");
+                circle_status.setFill(Color.web("#888888"));
+
+                // Afficher l'alerte
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Connexion perdue");
+                alert.setHeaderText("Vous avez été déconnecté du serveur");
+                alert.setContentText("Vérifiez votre connexion et relancez l'application.");
+                alert.showAndWait();
+            });
+        });
+
+        // 3. Demander la liste des utilisateurs connectés
         ClientManager.envoyerMessage("REQUEST_USER_LIST", null);
     }
 
     private void mettreAJourListeContacts(List<Utilisateur> users) {
         vbox_contacts.getChildren().clear();
         for (Utilisateur user : users) {
-            // Empêche de s'afficher soi-même
             if (currentUser != null && user.getNom().equals(currentUser.getNom())) continue;
             vbox_contacts.getChildren().add(creerItemContact(user));
         }
     }
 
     private HBox creerItemContact(Utilisateur user) {
-        HBox item = new HBox(10);
-        item.setPadding(new Insets(10, 15, 10, 15));
-        item.setCursor(Cursor.HAND);
-        item.setStyle("-fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
+        HBox itemContact = new HBox(10);
+        itemContact.setAlignment(Pos.CENTER_LEFT);
+        itemContact.setPadding(new Insets(10, 15, 10, 15));
+        itemContact.setCursor(Cursor.HAND);
+        itemContact.setStyle("-fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
 
-        boolean estEnLigne = user.getStatus() == Status.ONLINE;
+        boolean estEnLigne = user.getStatus() != null && user.getStatus() == Status.ONLINE;
         Circle statusCircle = new Circle(5, estEnLigne ? Color.web("#50c984") : Color.web("#888888"));
 
         Label lblNom = new Label(user.getNom());
-        lblNom.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        lblNom.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-family: 'Segoe UI';");
 
-        item.getChildren().addAll(statusCircle, lblNom);
+        itemContact.getChildren().addAll(statusCircle, lblNom);
 
-        item.setOnMouseClicked(e -> {
+        // Clic : charger la conversation
+        itemContact.setOnMouseClicked(e -> {
             lbl_current_contact.setText(user.getNom());
             lbl_status.setText(estEnLigne ? "En ligne" : "Hors ligne");
-            circle_status.setFill(statusCircle.getFill());
+            circle_status.setFill(estEnLigne ? Color.web("#50c984") : Color.web("#888888"));
+
             vbox_messages.getChildren().clear();
             ClientManager.envoyerMessage("GET_HISTORY", user);
+
+            // Effet visuel de sélection
+            vbox_contacts.getChildren().forEach(node ->
+                    node.setStyle("-fx-background-color: transparent; -fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;")
+            );
+            itemContact.setStyle("-fx-background-color: #3e3e42; -fx-background-radius: 5;");
         });
-        return item;
+
+        // Effet hover
+        itemContact.setOnMouseEntered(e -> {
+            if (!lbl_current_contact.getText().equals(user.getNom())) {
+                itemContact.setStyle("-fx-background-color: #2d2d30; -fx-background-radius: 5;");
+            }
+        });
+        itemContact.setOnMouseExited(e -> {
+            if (!lbl_current_contact.getText().equals(user.getNom())) {
+                itemContact.setStyle("-fx-background-color: transparent; -fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;");
+            }
+        });
+
+        return itemContact;
     }
 
     @FXML
     private void handleSendMessage() {
         String texte = txt_message_input.getText().trim();
-        if (texte.isEmpty() || lbl_current_contact.getText().contains("En attente")) return;
+        String destinataireNom = lbl_current_contact.getText();
 
-        Message msg = new Message(currentUser, new Utilisateur(lbl_current_contact.getText(), ""), texte);
-        ClientManager.envoyerMessage("SEND_PRIVATE_MESSAGE", msg);
-        afficherNouveauMessage(msg);
+        if (texte.isEmpty() || destinataireNom.contains("En attente")) return;
+
+        Utilisateur destinataire = new Utilisateur();
+        destinataire.setNom(destinataireNom);
+
+        Message messageAEnvoyer = new Message(currentUser, destinataire, texte);
+        ClientManager.envoyerMessage("SEND_PRIVATE_MESSAGE", messageAEnvoyer);
+        afficherNouveauMessage(messageAEnvoyer);
         txt_message_input.clear();
     }
 
     private void afficherNouveauMessage(Message msg) {
+        HBox conteneurBulle = new HBox();
         Label bulle = new Label(msg.getContenu());
+        bulle.setWrapText(true);
+        bulle.setMaxWidth(300);
         bulle.setPadding(new Insets(8, 12, 8, 12));
-        boolean moi = msg.getExpediteur().getNom().equals(currentUser.getNom());
-        bulle.setStyle(moi ? "-fx-background-color: #0084FF; -fx-text-fill: white; -fx-background-radius: 15;"
-                : "-fx-background-color: #E4E6EB; -fx-text-fill: black; -fx-background-radius: 15;");
 
-        HBox box = new HBox(moi ? bulle : new VBox(new Label(msg.getExpediteur().getNom() + ":"), bulle));
-        box.setAlignment(moi ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-        vbox_messages.getChildren().add(box);
+        boolean cestMoi = msg.getExpediteur().getNom().equals(currentUser.getNom());
+
+        if (cestMoi) {
+            conteneurBulle.setAlignment(Pos.CENTER_RIGHT);
+            bulle.setStyle("-fx-background-color: #0084FF; -fx-text-fill: white; " +
+                    "-fx-background-radius: 15 15 2 15;");
+        } else {
+            conteneurBulle.setAlignment(Pos.CENTER_LEFT);
+            bulle.setText(msg.getExpediteur().getNom() + ":\n" + msg.getContenu());
+            bulle.setStyle("-fx-background-color: #E4E6EB; -fx-text-fill: black; " +
+                    "-fx-background-radius: 15 15 15 2;");
+        }
+
+        conteneurBulle.getChildren().add(bulle);
+        vbox_messages.getChildren().add(conteneurBulle);
         scroll_messages.setVvalue(1.0);
     }
 
     @FXML
-    private void handleLogout() throws IOException {
-        ClientManager.deconnecter();
-        System.exit(0);
+    private void handleLogout(MouseEvent event) {
+        try {
+            ClientManager.deconnecter();
+            System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -6,3 +6,15 @@ mars 06, 2026 4:22:10 PM com.example.server.network.ChatServer start
 INFOS: [SERVEUR] démarré sur le port 1234
 mars 06, 2026 4:22:25 PM com.example.server.network.ChatServer start
 INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 5:49:47 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 5:50:05 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 6:08:33 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 6:09:35 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 6:10:00 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 6:10:12 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
