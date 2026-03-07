@@ -18,3 +18,283 @@ mars 06, 2026 6:10:00 PM com.example.server.network.ChatServer start
 INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
 mars 06, 2026 6:10:12 PM com.example.server.db.DatabaseManager sauvegarderMessage
 INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:46:49 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 6:47:30 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /10.1.3.103
+mars 06, 2026 6:48:14 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 6:48:24 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:48:26 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:48:33 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:48:36 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:48:45 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:48:56 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:07 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:17 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:23 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:24 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:30 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:43 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:48 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:49:55 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:50:00 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:50:09 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:50:25 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:50:41 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:50:57 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:51:12 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:51:21 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:51:34 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:51:49 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:51:52 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:52:09 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:52:22 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:52:31 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:52:38 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:52:58 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:13 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:17 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:19 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:30 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:37 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:48 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:52 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:53:58 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:54:43 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:54:51 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:54:55 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:55:02 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:55:11 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:55:23 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:56:28 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:56:50 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:57:00 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:57:16 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:57:32 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:57:36 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 6:57:57 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 7:04:25 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 7:04:33 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:05:34 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:05:46 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 7:06:17 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:06:33 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /10.1.3.103
+mars 06, 2026 7:09:39 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:09:52 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:10:17 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:10:28 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:10:42 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:10:57 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /10.1.3.103
+mars 06, 2026 7:11:43 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:11:54 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:12:34 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /10.1.3.103
+mars 06, 2026 7:12:52 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:13:13 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:13:33 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:13:47 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:13:52 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:47:15 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:48:07 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:48:36 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /10.1.3.103
+mars 06, 2026 7:48:48 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 06, 2026 7:49:49 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:49:49 PM com.example.server.network.ClientHandler envoyerObjet
+GRAVE: Erreur d'envoi client: Connection reset by peer
+mars 06, 2026 7:52:55 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:53:21 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:53:57 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:53:57 PM com.example.server.network.ClientHandler envoyerObjet
+GRAVE: Erreur d'envoi client: Connection reset by peer
+mars 06, 2026 7:55:00 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:55:18 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:55:55 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 7:56:26 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 7:56:55 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 7:58:00 PM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 06, 2026 8:25:56 PM com.example.server.Main main
+INFOS: Test de connexion de la base de données
+mars 06, 2026 8:26:00 PM com.example.server.Main main
+INFOS: L'utilisateur a été crée dans la base de données
+mars 06, 2026 8:26:40 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 06, 2026 8:27:02 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 06, 2026 8:29:48 PM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /10.1.3.103
+mars 06, 2026 8:30:21 PM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 1:44:33 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 1:44:56 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 1:59:41 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 1:59:55 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:01:59 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:02:07 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:02:12 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:02:38 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:02:43 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:02:56 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:03:08 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:03:22 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:03:26 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:03:37 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:03:46 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:05:37 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:13:26 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:14:50 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:16:29 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:16:47 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:16:53 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:16:59 AM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 07, 2026 2:17:01 AM com.example.server.network.ClientHandler run
+INFOS: [SERVEUR] Déconnexion détectée.
+mars 07, 2026 2:19:40 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:20:05 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:43:07 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:43:23 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:44:34 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:44:47 AM com.example.server.db.DatabaseManager sauvegarderMessageGroupe
+GRAVE: [DB] Erreur sauvegarde message groupe: could not execute statement [ERREUR: une valeur NULL viole la contrainte NOT NULL de la colonne « destinataire_id » dans la relation « messages »
+  Détail : La ligne en échec contient (15, heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy, 2026-03-07 02:44:47.013742, ENVOYE, null, 2).] [insert into messages (contenu,dateEnvoi,destinataire_id,expediteur_id,status) values (?,?,?,?,?)]
+mars 07, 2026 2:45:02 AM com.example.server.db.DatabaseManager sauvegarderMessageGroupe
+GRAVE: [DB] Erreur sauvegarde message groupe: could not execute statement [ERREUR: une valeur NULL viole la contrainte NOT NULL de la colonne « destinataire_id » dans la relation « messages »
+  Détail : La ligne en échec contient (16, yoooooooooooooooooooooo, 2026-03-07 02:45:02.158665, ENVOYE, null, 5).] [insert into messages (contenu,dateEnvoi,destinataire_id,expediteur_id,status) values (?,?,?,?,?)]
+mars 07, 2026 2:45:11 AM com.example.server.db.DatabaseManager sauvegarderMessageGroupe
+GRAVE: [DB] Erreur sauvegarde message groupe: could not execute statement [ERREUR: une valeur NULL viole la contrainte NOT NULL de la colonne « destinataire_id » dans la relation « messages »
+  Détail : La ligne en échec contient (17, whats'uppppppppppppppppppppppppp, 2026-03-07 02:45:11.903802, ENVOYE, null, 5).] [insert into messages (contenu,dateEnvoi,destinataire_id,expediteur_id,status) values (?,?,?,?,?)]
+mars 07, 2026 2:45:17 AM com.example.server.db.DatabaseManager sauvegarderMessageGroupe
+GRAVE: [DB] Erreur sauvegarde message groupe: could not execute statement [ERREUR: une valeur NULL viole la contrainte NOT NULL de la colonne « destinataire_id » dans la relation « messages »
+  Détail : La ligne en échec contient (18, nothingggggggggggggggggggggg, 2026-03-07 02:45:17.664968, ENVOYE, null, 2).] [insert into messages (contenu,dateEnvoi,destinataire_id,expediteur_id,status) values (?,?,?,?,?)]
+mars 07, 2026 2:50:14 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:50:31 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:50:47 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:50:54 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:51:08 AM com.example.server.db.DatabaseManager sauvegarderMessage
+INFOS: [DB] Message sauvegardé dans la base de données
+mars 07, 2026 2:51:30 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:51:47 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:53:00 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:53:14 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1
+mars 07, 2026 2:55:53 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] démarré sur le port 1234
+mars 07, 2026 2:56:09 AM com.example.server.network.ChatServer start
+INFOS: [SERVEUR] Connexion entrante : /127.0.0.1

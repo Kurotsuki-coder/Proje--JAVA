@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/bdmessagerieapp</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/bdmessagerieapp2</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">passer</property>
 

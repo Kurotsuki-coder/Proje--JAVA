@@ -25,10 +25,6 @@
                             <image><Image url="@../../../images_java/icon_msg3.png" /></image>
                             <VBox.margin><Insets top="20.0" /></VBox.margin>
                         </ImageView>
-                        <ImageView fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
-                            <image><Image url="@../../../images_java/icon_groupe.png" /></image>
-                            <VBox.margin><Insets top="20.0" /></VBox.margin>
-                        </ImageView>
                         <Pane prefHeight="137.0" prefWidth="92.0" />
                         <ImageView fx:id="btn_logout" fitHeight="48.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleLogout">
                             <image><Image url="@../../../images_java/icon_deconnection.png" /></image>

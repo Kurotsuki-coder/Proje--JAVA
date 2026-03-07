@@ -31,12 +31,32 @@ public class ChatController {
     @FXML private Label lbl_current_contact;
     @FXML private Label lbl_status;
     @FXML private Circle circle_status;
+    @FXML private TextField txt_search;
 
     private Utilisateur currentUser;
 
     @FXML
     public void initialize() {
-        // Rien ici — tout est dans setCurrentUser()
+        vbox_messages.heightProperty().addListener((obs, oldVal, newVal) -> {
+            scroll_messages.setVvalue(1.0);
+        });
+
+        txt_search.textProperty().addListener((obs, oldVal, newVal) -> {
+            String filtre = newVal.trim().toLowerCase();
+            vbox_contacts.getChildren().forEach(node -> {
+                if (node instanceof HBox hbox) {
+                    hbox.getChildren().stream()
+                            .filter(child -> child instanceof Label)
+                            .map(child -> (Label) child)
+                            .findFirst()
+                            .ifPresent(label -> {
+                                boolean visible = label.getText().toLowerCase().contains(filtre);
+                                hbox.setVisible(visible);
+                                hbox.setManaged(visible);
+                            });
+                }
+            });
+        });
     }
 
     public void setCurrentUser(Utilisateur user) {
@@ -203,7 +223,6 @@ public class ChatController {
 
         conteneurBulle.getChildren().add(bulle);
         vbox_messages.getChildren().add(conteneurBulle);
-        scroll_messages.setVvalue(1.0);
     }
 
     @FXML
