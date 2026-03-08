@@ -1,5 +1,6 @@
 package com.example.client.controller;
 
+import com.example.client.HelloApplication;
 import com.example.common.model.Utilisateur;
 import com.example.client.network.ClientManager;
 import javafx.application.Platform;
@@ -20,7 +21,6 @@ public class frmConnexionController {
     @FXML private Button btnQuitter;
     @FXML private Label lblMessage;
     @FXML private Button btnInscription;
-    @FXML private Label lblMotdepasseOublie;
 
     @FXML
     public void initialize() {
@@ -34,28 +34,32 @@ public class frmConnexionController {
                 return;
             }
 
+            // Désactiver le bouton pour éviter double clic
+            btnSeConnecter.setDisable(true);
+            lblMessage.setText("Connexion en cours...");
+
             Utilisateur userTrial = new Utilisateur();
             userTrial.setNom(identifiant);
             userTrial.setMotsdepasse(motdepasse);
 
-            // Envoi au serveur
-            Object reponse = ClientManager.envoyerRequete("CONNEXION", userTrial);
+            //Thread séparé — ne bloque pas le thread JavaFX
+            new Thread(() -> {
+                Object reponse = ClientManager.envoyerRequete("CONNEXION", userTrial);
 
-            if (reponse instanceof Utilisateur) {
-                Utilisateur userConnecte = (Utilisateur) reponse;
-                //ClientManager.startListening();
                 Platform.runLater(() -> {
-                    lblMessage.setText("Connexion réussie !");
-                    //Pour la redirection
-                    redirectionVersChat(event, userConnecte);
+                    btnSeConnecter.setDisable(false); // Réactiver le bouton
+                    if (reponse instanceof Utilisateur userConnecte) {
+                        lblMessage.setText("Connexion réussie !");
+                        redirectionVersChat(event, userConnecte);
+                    } else if ("ALREADY_CONNECTED".equals(reponse)) {
+                        lblMessage.setText("Ce compte est déjà connecté");
+                        lblMessage.setStyle("-fx-text-fill: orange;");
+                    } else {
+                        lblMessage.setText("Identifiant ou mot de passe incorrect");
+                        lblMessage.setStyle("-fx-text-fill: red;");
+                    }
                 });
-            } else if ("ALREADY_CONNECTED".equals(reponse)) {
-                lblMessage.setText("Ce compte est déjà connecté");
-                lblMessage.setStyle("-fx-text-fill: orange;");
-            } else {
-                Platform.runLater(() -> lblMessage.setText("Identifiant ou mot de passe incorrect"));
-                lblMessage.setStyle("-fx-text-fill: red;");
-            }
+            }).start();
         });
 
         // Quitter
@@ -65,9 +69,6 @@ public class frmConnexionController {
 
         // Navigation vers Inscription
         btnInscription.setOnAction(event -> chargerFenetre("/com/example/client/frmInscription.fxml", "Inscription"));
-
-        // Redirection vers mot de passe oublié
-        lblMotdepasseOublie.setOnMouseClicked(event -> chargerFenetre("/com/example/client/frmMotsDePasseOublie.fxml", "Récupération"));
     }
 
     private void chargerFenetre(String fxmlPath, String titre) {
@@ -77,6 +78,7 @@ public class frmConnexionController {
             Stage stage = new Stage();
             stage.setTitle(titre);
             stage.setScene(new Scene(root));
+            HelloApplication.ajouterIcone(stage);
             stage.show();
 
             // Fermer la fenêtre de connexion

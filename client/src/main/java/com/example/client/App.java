@@ -8,11 +8,12 @@ import javafx.stage.Stage;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        //charge le fichier fxml
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/client/frmConnexion.fxml"));
 
-        //création de la scene
         Scene scene = new Scene(fxmlLoader.load(), 622, 674);
+        stage.getIcons().add(new javafx.scene.image.Image(
+                getClass().getResourceAsStream("/images_java/icon_app.png")
+        ));
 
         stage.setTitle("Message Ma");
         stage.setScene(scene);

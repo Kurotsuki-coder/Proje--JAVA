@@ -38,11 +38,14 @@ public class ChatServer {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             logger.info("[SERVEUR] démarré sur le port " + PORT);
 
+            // lancer Hibernate au démarrage du serveur pour que la première connexion client soit rapide
+            logger.info("[SERVEUR] Initialisation de la base de données...");
+            dbManager.getAllUsers();
+            logger.info("[SERVEUR] Base de données prête !");
+
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 logger.info("[SERVEUR] Connexion entrante : " + clientSocket.getInetAddress());
-
-                // On crée le handler et on le lance
                 ClientHandler handler = new ClientHandler(clientSocket);
                 new Thread(handler).start();
             }

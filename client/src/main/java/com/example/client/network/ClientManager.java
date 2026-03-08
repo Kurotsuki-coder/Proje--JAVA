@@ -100,6 +100,7 @@ public class ClientManager {
      * - Vers syncResponseQueue si on attend une réponse synchrone (login/inscription)
      * - Vers onMessageReceived sinon (messages, liste users, historique...)
      */
+
     private static void startListeningIfNeeded() {
         if (listenerThread != null && listenerThread.isAlive()) return;
 
@@ -109,10 +110,13 @@ public class ClientManager {
                     Object obj = in.readObject();
 
                     if (waitingForSyncResponse) {
-                        // Réponse attendue (login/inscription) → débloquer envoyerRequete()
-                        syncResponseQueue.put(obj);
+                        // Seuls String et Utilisateur sont des réponses auth
+                        // On ignore les Payload (UPDATE_USER_LIST etc.) pendant l'auth
+                        if (obj instanceof String || obj instanceof com.example.common.model.Utilisateur) {
+                            syncResponseQueue.put(obj);
+                        }
+                        // Les Payload reçus pendant l'auth sont ignorés ils seront redemandés via REQUEST_USER_LIST après connexion
                     } else {
-                        // Message async → notifier l'UI
                         if (onMessageReceived != null) {
                             final Object finalObj = obj;
                             onMessageReceived.accept(finalObj);
@@ -120,36 +124,50 @@ public class ClientManager {
                     }
                 }
             } catch (Exception e) {
-                System.err.println("[CLIENT] Déconnexion du flux d'écoute: " + e.getMessage());
-                // Notifier l'UI de la perte de connexion
+                System.err.println("[CLIENT] Déconnexion: " + e.getMessage());
                 if (onDeconnexion != null) {
                     Platform.runLater(onDeconnexion);
                 }
             }
         });
-        listenerThread.setDaemon(true); // Le thread s'arrête quand l'app se ferme
+
+        listenerThread.setDaemon(true);
         listenerThread.start();
     }
 
-    //==================================================
-    // ENVOI DE MESSAGES
-    //==================================================
-
-    /**
-     * Envoi SYNCHRONE — attend la réponse du serveur (max 5 secondes).
-     * Utilisé uniquement pour LOGIN et INSCRIPTION.
-     */
     public static Object envoyerRequete(String action, Object data) {
         try {
-            connecter();
+            // Arrêter le listener AVANT de fermer le socket
+            if (listenerThread != null && listenerThread.isAlive()) {
+                listenerThread.interrupt();
+                listenerThread = null;
+            }
+
+            // Fermer le socket proprement
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+            socket = null;
+            out = null;
+            in = null;
+
+            // Désactiver temporairement le callback de déconnexion
+            // pour éviter l'alerte pendant la reconnexion
+            Runnable savedDeconnexion = onDeconnexion;
+            onDeconnexion = null;
+
             syncResponseQueue.clear();
             waitingForSyncResponse = true;
+
+            connecter();
+
+            // Remettre le callback après connexion réussie
+            onDeconnexion = savedDeconnexion;
 
             out.writeObject(new Payload(action, data));
             out.flush();
 
-            // Bloquer jusqu'à réception de la réponse ou timeout
-            Object response = syncResponseQueue.poll(5, TimeUnit.SECONDS);
+            Object response = syncResponseQueue.poll(15, TimeUnit.SECONDS);
             waitingForSyncResponse = false;
 
             if (response == null) {
@@ -160,12 +178,18 @@ public class ClientManager {
         } catch (Exception e) {
             waitingForSyncResponse = false;
             System.err.println("[CLIENT] Erreur requête: " + e.getMessage());
-            if (onDeconnexion != null) {
-                Platform.runLater(onDeconnexion);
-            }
             return null;
         }
     }
+
+    //==================================================
+    // ENVOI DE MESSAGES
+    //==================================================
+
+    /**
+     * Envoi SYNCHRONE — attend la réponse du serveur (max 5 secondes).
+     * Utilisé uniquement pour LOGIN et INSCRIPTION.
+     */
 
     /**
      * Envoi ASYNCHRONE — envoie et n'attend pas de réponse.

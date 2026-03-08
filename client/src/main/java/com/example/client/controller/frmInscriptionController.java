@@ -1,7 +1,9 @@
 package com.example.client.controller;
 
+import com.example.client.HelloApplication;
 import com.example.common.model.Utilisateur;
 import com.example.client.network.ClientManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,22 +36,26 @@ public class frmInscriptionController {
                 return;
             }
 
-            // On prépare l'objet Utilisateur
             Utilisateur newUser = new Utilisateur();
             newUser.setNom(identifiant);
             newUser.setMotsdepasse(motdepasse);
 
-            String reponse = (String) ClientManager.envoyerRequete("INSCRIPTION", newUser);
+            new Thread(() -> {
+                String reponse = (String) ClientManager.envoyerRequete("INSCRIPTION", newUser);
 
-            if ("SUCCESS".equals(reponse)) {
-                lblMessage.setText("Inscription réussie !");
-                System.out.println("Compte créé pour : " + identifiant);
-                // Optionnel : rediriger vers la connexion après 2 secondes
-            } else if ("DEJA_EXISTANT".equals(reponse)) {
-                lblMessage.setText("Identifiant déjà utilisé !");
-            } else {
-                lblMessage.setText("Erreur lors de l'inscription.");
-            }
+                Platform.runLater(() -> {
+                    if ("SUCCESS".equals(reponse)) {
+                        lblMessage.setText("Inscription réussie !");
+                        lblMessage.setStyle("-fx-text-fill: green;");
+                    } else if ("DEJA_EXISTANT".equals(reponse)) {
+                        lblMessage.setText("Identifiant déjà utilisé !");
+                        lblMessage.setStyle("-fx-text-fill: orange;");
+                    } else {
+                        lblMessage.setText("Erreur lors de l'inscription.");
+                        lblMessage.setStyle("-fx-text-fill: red;");
+                    }
+                });
+            }).start();
         });
 
         btnRetour.setOnAction(event -> chargerFenetre("/com/example/client/frmConnexion.fxml", "Connexion"));
@@ -59,7 +65,6 @@ public class frmInscriptionController {
         }
     }
 
-    // Petite méthode utilitaire pour éviter de répéter le code de changement de fenêtre
     private void chargerFenetre(String fxmlPath, String titre) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -67,6 +72,7 @@ public class frmInscriptionController {
             Stage stage = new Stage();
             stage.setTitle(titre);
             stage.setScene(new Scene(root));
+            HelloApplication.ajouterIcone(stage);
             stage.show();
 
             // Fermer la fenêtre actuelle

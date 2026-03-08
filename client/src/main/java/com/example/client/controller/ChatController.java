@@ -7,9 +7,12 @@ import com.example.common.model.Utilisateur;
 import com.example.common.network.Payload;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -19,6 +22,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import javafx.scene.web.WebView;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,11 +37,15 @@ public class ChatController {
     @FXML private Label lbl_status;
     @FXML private Circle circle_status;
     @FXML private TextField txt_search;
+    @FXML private javafx.scene.image.ImageView btn_gif;
 
     private Utilisateur currentUser;
 
     @FXML
     public void initialize() {
+        // Bouton GIF
+        btn_gif.setOnMouseClicked(e -> ouvrirGifPicker());
+        btn_gif.setCursor(Cursor.HAND);
         vbox_messages.heightProperty().addListener((obs, oldVal, newVal) -> {
             scroll_messages.setVvalue(1.0);
         });
@@ -89,11 +98,11 @@ public class ChatController {
                         circle_status.setFill(Color.web("#50c984"));
                         correspondantActuel = expediteur;
                     }
-
                     if (expediteur.equals(correspondantActuel) || expediteur.equals(currentUser.getNom())) {
                         afficherNouveauMessage(msg);
                     } else {
-                        System.out.println("Message reçu en arrière-plan de : " + expediteur);
+                        // ✅ Ajouter un point de notification sur le contact
+                        ajouterNotification(expediteur);
                     }
                 }
             });
@@ -137,6 +146,14 @@ public class ChatController {
             if (currentUser != null && user.getNom().equals(currentUser.getNom())) continue;
             vbox_contacts.getChildren().add(creerItemContact(user));
         }
+
+        // ✅ Sélectionner automatiquement le premier contact
+        if (!vbox_contacts.getChildren().isEmpty()) {
+            HBox premier = (HBox) vbox_contacts.getChildren().get(0);
+            premier.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+                    javafx.scene.input.MouseButton.PRIMARY, 1,
+                    true, true, true, true, true, true, true, true, true, true, null));
+        }
     }
 
     private HBox creerItemContact(Utilisateur user) {
@@ -163,7 +180,15 @@ public class ChatController {
             vbox_messages.getChildren().clear();
             ClientManager.envoyerMessage("GET_HISTORY", user);
 
-            // Effet visuel de sélection
+            //Supprimer le point de notification au clic
+            itemContact.getChildren().removeIf(child ->
+                    (child instanceof Circle
+                            && ((Circle) child).getFill().equals(Color.web("#6CA651"))
+                            && ((Circle) child).getRadius() == 6)
+                            || (child instanceof javafx.scene.layout.Region
+                            && HBox.getHgrow((javafx.scene.layout.Region) child) == javafx.scene.layout.Priority.ALWAYS)
+            );
+
             vbox_contacts.getChildren().forEach(node ->
                     node.setStyle("-fx-background-color: transparent; -fx-border-color: #3e3e42; -fx-border-width: 0 0 1 0;")
             );
@@ -203,25 +228,36 @@ public class ChatController {
 
     private void afficherNouveauMessage(Message msg) {
         HBox conteneurBulle = new HBox();
-        Label bulle = new Label(msg.getContenu());
-        bulle.setWrapText(true);
-        bulle.setMaxWidth(300);
-        bulle.setPadding(new Insets(8, 12, 8, 12));
-
         boolean cestMoi = msg.getExpediteur().getNom().equals(currentUser.getNom());
+        boolean estUnGif = msg.getContenu().startsWith("https://media") && msg.getContenu().contains("giphy.com");
 
-        if (cestMoi) {
-            conteneurBulle.setAlignment(Pos.CENTER_RIGHT);
-            bulle.setStyle("-fx-background-color: #0084FF; -fx-text-fill: white; " +
-                    "-fx-background-radius: 15 15 2 15;");
+        if (estUnGif) {
+            // Afficher le GIF avec un WebView
+            WebView webView = new WebView();
+            webView.setPrefSize(200, 200);
+            webView.setMaxSize(200, 200);
+            String html = "<html><body style='margin:0;padding:0;background:transparent;'>"
+                    + "<img src='" + msg.getContenu() + "' width='200' style='border-radius:10px;'/>"
+                    + "</body></html>";
+            webView.getEngine().loadContent(html);
+            conteneurBulle.getChildren().add(webView);
         } else {
-            conteneurBulle.setAlignment(Pos.CENTER_LEFT);
-            bulle.setText(msg.getExpediteur().getNom() + ":\n" + msg.getContenu());
-            bulle.setStyle("-fx-background-color: #E4E6EB; -fx-text-fill: black; " +
-                    "-fx-background-radius: 15 15 15 2;");
+            // Message texte normal
+            Label bulle = new Label(msg.getContenu());
+            bulle.setWrapText(true);
+            bulle.setMaxWidth(300);
+            bulle.setPadding(new Insets(8, 12, 8, 12));
+
+            if (cestMoi) {
+                bulle.setStyle("-fx-background-color: #0084FF; -fx-text-fill: white; -fx-background-radius: 15 15 2 15;");
+            } else {
+                bulle.setText(msg.getExpediteur().getNom() + ":\n" + msg.getContenu());
+                bulle.setStyle("-fx-background-color: #E4E6EB; -fx-text-fill: black; -fx-background-radius: 15 15 15 2;");
+            }
+            conteneurBulle.getChildren().add(bulle);
         }
 
-        conteneurBulle.getChildren().add(bulle);
+        conteneurBulle.setAlignment(cestMoi ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         vbox_messages.getChildren().add(conteneurBulle);
     }
 
@@ -229,9 +265,82 @@ public class ChatController {
     private void handleLogout(MouseEvent event) {
         try {
             ClientManager.deconnecter();
-            System.exit(0);
+
+            // Charger la page de connexion
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/client/frmConnexion.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) vbox_messages.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void ouvrirGifPicker() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/client/frmGifPicker.fxml"));
+            Parent root = loader.load();
+            GifPickerController ctrl = loader.getController();
+
+            // Quand un GIF est sélectionné → l'envoyer comme message
+            ctrl.setOnGifSelected(gifUrl -> {
+                String destinataireNom = lbl_current_contact.getText();
+                if (destinataireNom.contains("En attente")) return;
+
+                Utilisateur destinataire = new Utilisateur();
+                destinataire.setNom(destinataireNom);
+
+                Message msg = new Message(currentUser, destinataire, gifUrl);
+                ClientManager.envoyerMessage("SEND_PRIVATE_MESSAGE", msg);
+                afficherNouveauMessage(msg);
+            });
+
+            Stage stage = new Stage();
+            stage.setTitle("Choisir un GIF");
+            stage.setScene(new Scene(root));
+            stage.initOwner(vbox_messages.getScene().getWindow()); // Attaché à la fenêtre principale
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ajouterNotification(String nomExpediteur) {
+        vbox_contacts.getChildren().forEach(node -> {
+            if (node instanceof HBox hbox) {
+                // Trouver le bon contact par son nom
+                hbox.getChildren().stream()
+                        .filter(child -> child instanceof Label)
+                        .map(child -> (Label) child)
+                        .findFirst()
+                        .ifPresent(label -> {
+                            if (label.getText().equals(nomExpediteur)) {
+                                // Vérifier si le point existe déjà
+                                /*boolean dejaDot = hbox.getChildren().stream()
+                                        .anyMatch(child -> child instanceof Circle
+                                                && ((Circle) child).getFill().equals(Color.web("#FF3B30"))
+                                                && ((Circle) child).getRadius() == 6);*/
+                                boolean dejaDot = hbox.getChildren().stream()
+                                        .anyMatch(child -> child instanceof Circle
+                                                && ((Circle) child).getFill().equals(Color.web("#6CA651"))
+                                                && ((Circle) child).getRadius() == 6);
+
+                                if (!dejaDot) {
+                                    Circle dot = new Circle(6, Color.web("#6CA651"));
+
+                                    javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+                                    HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+                                    hbox.getChildren().add(spacer);
+                                    hbox.getChildren().add(dot);
+                                    HBox.setMargin(dot, new Insets(0, 10, 0, 0));
+                                }
+                            }
+                        });
+            }
+        });
     }
 }
